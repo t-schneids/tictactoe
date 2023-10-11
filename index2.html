@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tic Tac Toe</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {text-align: center;}
+            #gameState {
+                background-color: lightgray;
+                width: 300px;
+                height: 40px;
+                margin: 0 auto;
+                font-size: xx-large;
+            }
+            .gridWrap { /* Make container for the grid */
+                margin-top: 20px;
+                display: inline-block;
+                border: 2px solid blue;
+                padding: 15px;
+            }
+
+            .grid { /* Make the grid */
+                display: grid;
+                grid-template-columns: 100px 100px 100px;
+                grid-template-rows: 70px 70px 70px;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .gridBox {
+                border: 1px solid black;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .gridBox input[type="button"]:hover {
+                background-color: rgba(37, 208, 238, 0.2);
+            }
+
+            .gridBox input[type="button"] {
+                width: 100%;
+                height: 100%;
+                border: none;
+                padding: 0;
+                background-color: white;
+                font-size:xx-large;
+            }
+
+            .newGameButton {
+                visibility: hidden;
+                border: 1px solid black;
+                display: flex;
+                width: 200px;
+                height: 50px;
+                margin: 0 auto;
+                margin-top: 20px;
+            }
+
+            .startGame {
+                font-size: 20px;
+                font-weight: 600;
+                width: 100%;
+                height: 100%;
+                border: none;
+                padding: 0;
+                background-color: green;
+            }
+        </style>
+
+        <script>
+            //initialize values
+            xTurn = true;
+            values = [-1, -2, -3, -4, -5, -6, -7, -8, -9];
+            count = 0;
+            
+            function stalemate() {
+                announcement = document.getElementById('gameState');
+                announcement.innerText = "It's a draw!";
+                button = document.getElementById('newGameButton');
+                button.style.visibility = 'visible';
+            }
+
+            /* 
+             * gameState
+             * Parameters: 
+             *    values: an array keeping track of the placement of x's and o's
+             *    xTurn: a boolean to say whether it is Player X's turn
+             * Purpose: To decide if the game should be ended
+             * Returns: Nothing
+            */
+            function gameState(values, xTurn) {
+                if (count == 9) {
+                    stalemate();
+                } else if (values[0] == values[3] && values[3] == values[6]) {
+                    endGame(xTurn);
+                } else if (values[1] == values[4] && values[4] == values[7]) {
+                    endGame(xTurn);
+                } else if (values[2] == values[5] && values[5] == values[8]) {
+                    endGame(xTurn);
+                } else if (values[0] == values[1] && values[1] == values[2]) {
+                    endGame(xTurn);
+                } else if (values[3] == values[4] && values[4] == values[5]) {
+                    endGame(xTurn);
+                } else if (values[6] == values[7] && values[7] == values[8]) {
+                    endGame(xTurn);
+                } else if (values[6] == values[4] && values[4] == values[2]) {
+                    endGame(xTurn);
+                } else if (values[0] == values[4] && values[4] == values[8]) {
+                    endGame(xTurn);
+                }
+            }
+
+            /* 
+             * endgame
+             * Parameters: 
+             *    xTurn: a boolean to say whether it is Player X's turn
+             * Purpose: to change screen text and layout to signal end of game
+             * Returns: Nothing
+            */
+            function endGame(xTurn) {
+                curr = ""
+                if (xTurn) {
+                    curr = "X"
+                } else {
+                    curr = "O"
+                }
+                announcement = document.getElementById('gameState');
+                announcement.innerText = "Player " + curr + " Wins!!!";
+                button = document.getElementById('newGameButton');
+                button.style.visibility = 'visible';
+            }
+
+            /* 
+             * startNewGame
+             * Parameters: 
+             *    values: an array keeping track of the placement of x's and o's
+             *    buttons: An array with each button on the tic tac toe board
+             * Purpose: To decide if the game should be ended
+             * Returns: Nothing
+            */
+            function startNewGame(values, buttons) {
+                announcement = document.getElementById('gameState');
+                announcement.innerText = "Player X Turn";
+                newGameButton = document.getElementById('newGameButton');
+                button.style.visibility = 'hidden';
+
+                for (i = 0; i < 9; i++) {
+                    values[i] = i * -1;
+                    buttons[i].value = "";
+                }
+
+                count = 0;
+                return true; //set xTurn to true
+            }
+
+            /* 
+             * clickHandler
+             * Parameters: 
+             *    event: event object that allows access to the actual button 
+             *           pressed
+             * Purpose: an event handler for a button click on the board
+             * Returns: Nothing
+            */
+            function clickHandler(event) {
+                    announcement = document.getElementById('gameState');
+                    let nextTurn = "";
+                    const button = event.target;
+                    if (xTurn) {
+                        button.value = "X"
+                        nextTurn = "O";
+                        values[event.target.id] = 1;
+                    } else {
+                        button.value = "O"
+                        nextTurn = "X";
+                        values[event.target.id] = 2;
+                    }
+                
+                    count += 1;
+                    announcement.innerText = "Player " + nextTurn + " Turn"
+                    gameState(values, xTurn);
+                    xTurn = !xTurn;
+                }
+        </script>
+    </head>
+    <body>
+        <h1>Tic Tac Toe - Let's Go!</h1>
+        <div id="gameState">Player X Turn</div>
+        
+        <div class="gridWrap" id="wrapper">
+                <div class="grid" id="grid"> </div>
+        </div>
+
+        <div class="newGameButton" id="newGameButton">
+            <input type="button" class="startGame" name="startGame" 
+              value="Start New Game">
+        </div>
+
+        <script>
+            window.onload= function() {
+                gridContainer = document.getElementById('grid');
+                newGameButton = document.getElementById('newGameButton');
+
+                //make the grid using divs with inputs of type button
+                //similar to slide show
+                for (let i = 0; i < 9; i++) {
+                    const box = document.createElement('div');
+                    box.className = 'gridBox';
+
+                    const button = document.createElement('input');
+                    button.type = 'button';
+                    button.className = 'buttons';
+                    button.id = i; 
+
+                    box.appendChild(button);
+
+                gridContainer.appendChild(box);
+            }
+
+                //Giving all the buttons the same event handler
+                const buttons = document.querySelectorAll('.buttons');
+
+                //Add event listeners for all buttons
+                for (const button of buttons) {
+                    button.addEventListener('click', clickHandler);
+                }
+
+                newGameButton.addEventListener('click', 
+                                () => {xTurn = startNewGame(values, buttons)});
+            }
+        </script>
+    </body>
+</html>
