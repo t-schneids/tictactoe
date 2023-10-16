@@ -71,9 +71,18 @@
         <script>
             //initialize values
             xTurn = true;
+            //make this different so that when checking gameState they
+            //do not appear equal
             values = [-1, -2, -3, -4, -5, -6, -7, -8, -9];
             count = 0;
             
+            /* 
+             * stalemate
+             * Parameters: 
+             * Purpose: To alter text on screen to reflect a stalemate.
+             *          Makes newGameButton visible
+             * Returns: Nothing
+            */
             function stalemate() {
                 announcement = document.getElementById('gameState');
                 announcement.innerText = "It's a draw!";
@@ -202,7 +211,7 @@
                 newGameButton = document.getElementById('newGameButton');
 
                 //make the grid using divs with inputs of type button
-                //similar to slide show
+                //reference design from class slides
                 for (let i = 0; i < 9; i++) {
                     const box = document.createElement('div');
                     box.className = 'gridBox';
@@ -218,7 +227,7 @@
             }
 
                 //Giving all the buttons the same event handler
-                const buttons = document.querySelectorAll('.buttons');
+                 const buttons = document.querySelectorAll('.buttons');
 
                 //Add event listeners for all buttons
                 for (const button of buttons) {
@@ -231,3 +240,4 @@
         </script>
     </body>
 </html>
+
