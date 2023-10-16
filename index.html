@@ -175,7 +175,10 @@
                     announcement = document.getElementById('gameState');
                     let nextTurn = "";
                     const button = event.target;
-                    if (xTurn) {
+
+                    if (button.value == "X" || button.value == "O") {
+                        return; // prevent overiding a value
+                    } else if (xTurn) {
                         button.value = "X"
                         nextTurn = "O";
                         values[event.target.id] = 1;
@@ -240,4 +243,5 @@
         </script>
     </body>
 </html>
+
 
